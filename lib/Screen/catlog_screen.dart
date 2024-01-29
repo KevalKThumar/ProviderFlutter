@@ -22,11 +22,9 @@ class CatlogPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final catelogProvider =
-        Provider.of<CatelogProvider>(context, listen: false);
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Screen(data: data, catelogProvider: catelogProvider),
+        home: Screen(data: data),
         theme: ThemeData(primarySwatch: Colors.brown),
         routes: {
           '/cart': (context) => const CartPage(),
@@ -38,11 +36,9 @@ class Screen extends StatelessWidget {
   const Screen({
     super.key,
     required this.data,
-    required this.catelogProvider,
   });
 
   final List<Map<String, dynamic>> data;
-  final CatelogProvider catelogProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -66,49 +62,59 @@ class Screen extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: ListView.separated(
             itemBuilder: (context, index) {
-              return ListTile(
-                title: Text("${data[index]['title']}"),
-                leading: Container(
-                  height: 60,
-                  width: 50,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Vx.randomColor,
+              return Consumer<CatelogProvider>(
+                  builder: (context, catelogProvider, child) {
+                return ListTile(
+                  title: Text(
+                    "${data[index]['title']}",
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: Vx.black,
+                    ),
                   ),
-                ).onTap(() {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("${data[index]['title']}"),
-                      duration: const Duration(seconds: 1),
-                      showCloseIcon: true,
-                      closeIconColor: Colors.red,
-                      padding: const EdgeInsets.all(10),
-                      shape: const BeveledRectangleBorder(),
+                  leading: Container(
+                    height: 60,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Vx.randomColor,
                     ),
-                  );
-                }),
-                trailing: Icon(Icons.add, color: Vx.randomColor).onTap(() {
-                  catelogProvider.add(data[index]);
+                  ).onTap(() {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("${data[index]['title']}"),
+                        duration: const Duration(seconds: 1),
+                        showCloseIcon: true,
+                        closeIconColor: Colors.red,
+                        padding: const EdgeInsets.all(10),
+                        shape: const BeveledRectangleBorder(),
+                      ),
+                    );
+                  }),
+                  trailing: const Icon(Icons.add, color: Vx.black).onTap(() {
+                    catelogProvider.add(data[index]);
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("${data[index]['title']} added to cart"),
-                      duration: const Duration(seconds: 2),
-                      showCloseIcon: true,
-                      closeIconColor: Colors.red,
-                      padding: const EdgeInsets.all(10),
-                      shape: const BeveledRectangleBorder(),
-                    ),
-                  );
-                }),
-                subtitle: Text("${data[index]['subtitle']}"),
-                isThreeLine: true,
-                dense: true,
-                tileColor: Colors.amber,
-                hoverColor: Colors.grey[200],
-                selected: true,
-                enabled: true,
-              );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("${data[index]['title']} added to cart"),
+                        duration: const Duration(seconds: 2),
+                        showCloseIcon: true,
+                        closeIconColor: Colors.red,
+                        padding: const EdgeInsets.all(10),
+                        shape: const BeveledRectangleBorder(),
+                      ),
+                    );
+                  }),
+                  subtitle: Text("${data[index]['subtitle']}"),
+                  isThreeLine: true,
+                  dense: true,
+                  tileColor: Colors.amber,
+                  hoverColor: Colors.grey[200],
+                  selected: true,
+                  enabled: true,
+                );
+              });
             },
             separatorBuilder: (context, index) => const Divider(),
             itemCount: data.length,

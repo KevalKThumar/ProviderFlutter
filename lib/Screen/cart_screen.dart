@@ -9,6 +9,7 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final catelog = Provider.of<CatelogProvider>(context);
+    print("Cart build");
     return Scaffold(
         appBar: AppBar(
           title: const Text("Cart Page"),
@@ -42,9 +43,9 @@ class CartPage extends StatelessWidget {
                             ),
                             title: Text(catelog.items[index]["title"]),
                             subtitle: Text(catelog.items[index]["subtitle"]),
-                            trailing: Icon(
+                            trailing: const Icon(
                               Icons.remove,
-                              color: Vx.randomColor,
+                              color: Vx.black,
                             ).onTap(() {
                               catelog.remove(catelog.items[index]);
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -69,7 +70,11 @@ class CartPage extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 child: Consumer(
                   builder: (context, value, child) =>
-                      "Total : ${catelog.total}".text.color(Vx.black).make(),
+                      "Total : ${catelog.total}"
+                      .text
+                      .size(20)
+                      .color(Vx.black)
+                      .make(),
                 ),
               )
 
